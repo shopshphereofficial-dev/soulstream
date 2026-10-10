@@ -73,6 +73,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.soulstream.app.Ads
 import com.soulstream.app.SoulStreamApp
 import com.soulstream.app.data.ActiveJob
 import com.soulstream.app.data.LiveDownloads
@@ -141,6 +142,9 @@ fun HomeScreen(
     var jobs by remember { mutableStateOf<List<ActiveJob>>(emptyList()) }
     var clipLink by remember { mutableStateOf<String?>(null) }
     var showAdFree by remember { mutableStateOf(false) }
+    var adPasses by remember { mutableStateOf(Prefs.adPasses(ctx)) }
+    var watchingAd by remember { mutableStateOf(false) }
+    val activity = ctx as? android.app.Activity
     val appear = remember { Animatable(0f) }
 
     val accentA = MaterialTheme.colorScheme.primary
@@ -386,6 +390,58 @@ fun HomeScreen(
                             color = Muted,
                             style = MaterialTheme.typography.bodySmall
                         )
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(20.dp))
+            SectionLabel("Ad-free passes", accentA)
+            NeonCard(Modifier.fillMaxWidth(), accent = accentB) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        Modifier
+                            .size(36.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Brush.linearGradient(listOf(accentB, accentA))),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(Icons.Rounded.Bolt, contentDescription = null, tint = Color(0xFF03060E), modifier = Modifier.size(20.dp))
+                    }
+                    Spacer(Modifier.width(10.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            if (adPasses == 1) "1 free pass" else "$adPasses free passes",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = OnDark
+                        )
+                        Text(
+                            "Watch an ad now, then your next downloads skip the ad.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Muted
+                        )
+                    }
+                }
+                Spacer(Modifier.height(10.dp))
+                GlowButton(
+                    text = if (watchingAd) "LOADING AD..." else "WATCH AN AD  (+1 PASS)",
+                    modifier = Modifier.fillMaxWidth(),
+                    icon = Icons.Rounded.PlayArrow,
+                    accentA = accentA,
+                    accentB = accentB
+                ) {
+                    val act = activity
+                    if (!watchingAd && act != null) {
+                        watchingAd = true
+                        Ads.showForReward(act) { earned ->
+                            watchingAd = false
+                            if (earned) {
+                                Prefs.addAdPasses(ctx, 1)
+                                adPasses = Prefs.adPasses(ctx)
+                                Toast.makeText(ctx, "Pass added - next download skips the ad", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(ctx, "Ad not completed - no pass added", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 }
             }

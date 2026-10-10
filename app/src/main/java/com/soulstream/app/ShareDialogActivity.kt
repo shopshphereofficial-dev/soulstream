@@ -142,6 +142,17 @@ class ShareDialogActivity : ComponentActivity() {
                             }
                             Spacer(Modifier.height(10.dp))
 
+                            val passes = Prefs.adPasses(this@ShareDialogActivity)
+                            if (passes > 0) {
+                                Text(
+                                    if (passes == 1) "1 free pass - no ad this time"
+                                    else "$passes free passes - no ad this time",
+                                    color = accentA,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                                Spacer(Modifier.height(6.dp))
+                            }
+
                             Column(
                                 Modifier
                                     .height(330.dp)
@@ -152,17 +163,25 @@ class ShareDialogActivity : ComponentActivity() {
                                         QualityRow(q) {
                                             if (!launching) {
                                                 launching = true
-                                                // Give a still-loading ad a short moment to arrive,
-                                                // then show it and start the download.
-                                                scope.launch {
-                                                    var waited = 0
-                                                    while (!Ads.isReady() && waited < 3500) {
-                                                        delay(150)
-                                                        waited += 150
-                                                    }
-                                                    Ads.show(this@ShareDialogActivity) {
-                                                        startIt(url, q.index)
-                                                        finish()
+                                                // If the user banked a pass (watched an ad in
+                                                // free time), skip the ad this time.
+                                                if (Prefs.adPasses(this@ShareDialogActivity) > 0) {
+                                                    Prefs.addAdPasses(this@ShareDialogActivity, -1)
+                                                    startIt(url, q.index)
+                                                    finish()
+                                                } else {
+                                                    // Otherwise give a still-loading ad a short
+                                                    // moment to arrive, then show it.
+                                                    scope.launch {
+                                                        var waited = 0
+                                                        while (!Ads.isReady() && waited < 3500) {
+                                                            delay(150)
+                                                            waited += 150
+                                                        }
+                                                        Ads.show(this@ShareDialogActivity) {
+                                                            startIt(url, q.index)
+                                                            finish()
+                                                        }
                                                     }
                                                 }
                                             }

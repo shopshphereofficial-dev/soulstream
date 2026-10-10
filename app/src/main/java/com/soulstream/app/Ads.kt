@@ -110,4 +110,37 @@ object Ads {
             finishOnce()
         }
     }
+
+    /**
+     * Show the rewarded ad for the "watch in free time to earn a pass" flow and
+     * report whether the user actually earned the reward (watched to the end).
+     * [onResult] is always called once — with false if no ad was available.
+     */
+    fun showForReward(activity: Activity, onResult: (earned: Boolean) -> Unit) {
+        val ad = rewarded
+        if (ad == null) {
+            load(activity)
+            onResult(false)
+            return
+        }
+        rewarded = null
+        var earned = false
+        var done = false
+        val finishOnce = {
+            if (!done) {
+                done = true
+                onResult(earned)
+                load(activity)
+            }
+        }
+        ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() = finishOnce()
+            override fun onAdFailedToShowFullScreenContent(error: AdError) = finishOnce()
+        }
+        try {
+            ad.show(activity) { earned = true }
+        } catch (t: Throwable) {
+            finishOnce()
+        }
+    }
 }

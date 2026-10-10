@@ -36,6 +36,11 @@ object Prefs {
     fun engineUpdatedAt(ctx: Context): Long = sp(ctx).getLong("last_engine_update", 0L)
     fun setEngineUpdatedAt(ctx: Context, t: Long) = sp(ctx).edit().putLong("last_engine_update", t).apply()
 
+    // ---- ad-free download passes (earned by watching ads in free time) ----
+    fun adPasses(ctx: Context): Int = sp(ctx).getInt("ad_passes", 0)
+    fun setAdPasses(ctx: Context, n: Int) = sp(ctx).edit().putInt("ad_passes", n.coerceAtLeast(0)).apply()
+    fun addAdPasses(ctx: Context, delta: Int) = setAdPasses(ctx, adPasses(ctx) + delta)
+
     // ---- diagnostics: the last crash, so the user can report it ----
     fun lastCrash(ctx: Context): String? = sp(ctx).getString("last_crash", null)
     fun setLastCrash(ctx: Context, msg: String) =
