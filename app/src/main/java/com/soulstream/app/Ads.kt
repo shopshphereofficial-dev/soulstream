@@ -28,11 +28,13 @@ object Ads {
      * violation and can get the account flagged). When you are ready to go live,
      * swap the two lines below so the real unit is active.
      */
-    // LIVE (real) rewarded ad unit:
-    private const val REWARDED_UNIT_ID = "ca-app-pub-7206645274499834/5234358761"
+    // Google official TEST rewarded ad unit — ACTIVE while we verify the flow.
+    // Real ads are shown only after switching to the LIVE unit below, so that
+    // testing never risks an AdMob "invalid activity" flag.
+    private const val REWARDED_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
 
-    // Google official TEST rewarded ad unit (used for now, while testing):
-    // private const val REWARDED_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
+    // LIVE (real) rewarded ad unit for SoulStream — switch to this to go live:
+    // private const val REWARDED_UNIT_ID = "ca-app-pub-7206645274499834/5234358761"
 
     @Volatile private var rewarded: RewardedAd? = null
     @Volatile private var loading = false
