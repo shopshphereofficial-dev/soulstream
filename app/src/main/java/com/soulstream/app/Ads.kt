@@ -21,20 +21,17 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 object Ads {
 
     /**
-     * AdMob rewarded ad unit for SoulStream.
+     * AdMob rewarded ad unit for SoulStream (LIVE — real ads).
      *
-     * NOTE: While testing, Google's official TEST rewarded unit is used so that
-     * no real ads are served (tapping your own real ads is an AdMob policy
-     * violation and can get the account flagged). When you are ready to go live,
-     * swap the two lines below so the real unit is active.
+     * The Google official TEST unit is kept commented below; swap to it only if
+     * you need to test again, since tapping your own live ads is an AdMob policy
+     * violation and can flag the account.
      */
-    // Google official TEST rewarded ad unit — ACTIVE while we verify the flow.
-    // Real ads are shown only after switching to the LIVE unit below, so that
-    // testing never risks an AdMob "invalid activity" flag.
-    private const val REWARDED_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
+    // LIVE (real) rewarded ad unit for SoulStream.
+    private const val REWARDED_UNIT_ID = "ca-app-pub-7206645274499834/5234358761"
 
-    // LIVE (real) rewarded ad unit for SoulStream — switch to this to go live:
-    // private const val REWARDED_UNIT_ID = "ca-app-pub-7206645274499834/5234358761"
+    // Google official TEST rewarded ad unit (only for development/testing):
+    // private const val REWARDED_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
 
     @Volatile private var rewarded: RewardedAd? = null
     @Volatile private var loading = false
