@@ -105,7 +105,7 @@ object Ads {
             override fun onAdFailedToShowFullScreenContent(error: AdError) = finishOnce()
         }
         try {
-            ad.show(activity) { _, _ -> /* reward earned — we just proceed on dismissal */ }
+            ad.show(activity) { /* reward earned — we proceed on dismissal */ }
         } catch (t: Throwable) {
             finishOnce()
         }
