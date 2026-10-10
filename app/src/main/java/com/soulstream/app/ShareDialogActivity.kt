@@ -152,10 +152,18 @@ class ShareDialogActivity : ComponentActivity() {
                                         QualityRow(q) {
                                             if (!launching) {
                                                 launching = true
-                                                // Watch the rewarded ad, then start the download.
-                                                Ads.show(this@ShareDialogActivity) {
-                                                    startIt(url, q.index)
-                                                    finish()
+                                                // Give a still-loading ad a short moment to arrive,
+                                                // then show it and start the download.
+                                                scope.launch {
+                                                    var waited = 0
+                                                    while (!Ads.isReady() && waited < 3500) {
+                                                        delay(150)
+                                                        waited += 150
+                                                    }
+                                                    Ads.show(this@ShareDialogActivity) {
+                                                        startIt(url, q.index)
+                                                        finish()
+                                                    }
                                                 }
                                             }
                                         }

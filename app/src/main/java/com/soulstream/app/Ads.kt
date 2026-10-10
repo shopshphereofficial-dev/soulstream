@@ -77,6 +77,9 @@ object Ads {
         }
     }
 
+    /** True when a rewarded ad is loaded and ready to show. */
+    fun isReady(): Boolean = rewarded != null
+
     /**
      * Show the preloaded rewarded ad, then run [onDone].
      *

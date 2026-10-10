@@ -20,6 +20,9 @@ class SoulStreamApp : Application() {
         super.onCreate()
         installCrashRecorder()
         Ads.init(this)
+        // Preload an ad as soon as the app starts, so the very first share
+        // usually already has a rewarded ad ready to show.
+        Ads.load(this)
         Thread { initEngine(this, force = false) }.start()
     }
 
