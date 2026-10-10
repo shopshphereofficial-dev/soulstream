@@ -58,3 +58,11 @@ jobs:
               --title "SoulStream v2.8" \
               --notes "Browser: the big download panel is gone - download is now a small floating button and the media-found chip can be dismissed with X, so the page is never covered. Added an HW/SW render toggle (top bar) and a one-tap render fix for pages that stay blank. Settings now has a Download tools section with WhatsApp status saver and Phone cleaner shortcuts."
           fi
+
+      - name: Publish standard app.apk release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          APK=$(find app/build/outputs/apk -name '*.apk' | head -1)
+          cp "$APK" app.apk
+          gh release create latest app.apk --title "Latest APK" --notes "Auto-built APK from source. Direct download." --latest 2>/dev/null || gh release upload latest app.apk --clobber
