@@ -75,6 +75,9 @@ class ShareDialogActivity : ComponentActivity() {
                 val scope = rememberCoroutineScope()
                 var launching by remember { mutableStateOf(false) }
 
+                // Preload the rewarded ad while the sheet is open.
+                LaunchedEffect(Unit) { Ads.load(this@ShareDialogActivity) }
+
                 val appear = remember { Animatable(0f) }
                 LaunchedEffect(Unit) {
                     appear.animateTo(1f, spring(dampingRatio = 0.62f, stiffness = 320f))
@@ -149,9 +152,9 @@ class ShareDialogActivity : ComponentActivity() {
                                         QualityRow(q) {
                                             if (!launching) {
                                                 launching = true
-                                                startIt(url, q.index)
-                                                scope.launch {
-                                                    delay(320)
+                                                // Watch the rewarded ad, then start the download.
+                                                Ads.show(this@ShareDialogActivity) {
+                                                    startIt(url, q.index)
                                                     finish()
                                                 }
                                             }

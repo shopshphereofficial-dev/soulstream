@@ -19,6 +19,7 @@ class SoulStreamApp : Application() {
     override fun onCreate() {
         super.onCreate()
         installCrashRecorder()
+        Ads.init(this)
         Thread { initEngine(this, force = false) }.start()
     }
 

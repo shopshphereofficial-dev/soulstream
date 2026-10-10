@@ -92,4 +92,7 @@ dependencies {
     implementation 'io.github.junkfood02.youtubedl-android:library:0.18.1'
     implementation 'io.github.junkfood02.youtubedl-android:ffmpeg:0.18.1'
     implementation 'io.github.junkfood02.youtubedl-android:aria2c:0.18.1'
+
+    // Google Mobile Ads SDK — shows the rewarded ad before a download starts.
+    implementation 'com.google.android.gms:play-services-ads:23.3.0'
 }
